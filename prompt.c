@@ -1,8 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
 
+#include <readline/history.h>
+#include <readline/readline.h>
 
-/* Declare a buffer for user input of size 2048 chars */
-static char input[2048];
 
 int main(int argc, char** argv) 
 {
@@ -16,11 +17,13 @@ int main(int argc, char** argv)
 	while (1)
 	{
 
-		fputs("lisp> ", stdout);
+		char* input = readline("lispy> ");
 
-		fgets(input, 2048, stdin);
+		add_history(input);
 
-		printf("No you're a %s", input);
+		printf("No you're a %s\n", input);
+
+		free(input);
 
 	}
 
