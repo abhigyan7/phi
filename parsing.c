@@ -214,9 +214,6 @@ lval* lval_read(mpc_ast_t* t)
 		x = lval_add(x, lval_read(t->children[i]));
 	}
 	
-	printf("This is X: %d, ", x);
-	printf("This is the tag: %s\n", t->tag);
-
 	return x;
 
 }
@@ -315,7 +312,6 @@ int main(int argc, char** argv)
 			mpc_ast_print(r.output);
 
 			lval* x = lval_read(r.output);
-			printf("Read the ast\n");
 			lval_println(x);
 			//lval_del(x);
 			//lval result = eval(r.output);
