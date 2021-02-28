@@ -531,6 +531,38 @@ lval* builtin_div(lenv* e, lval*a)
 }
 
 
+lval* builtin_def(lenv* e, lval*a)
+{
+	LASSERT(a, a->cell[0]->type == LVAL_QEXPR,
+		"Function 'def' passed incorrect type");
+
+	lval* syms = a->cell[0];
+
+
+	for (int i = 0; i < syms->count; i++)
+	{
+		LASSERT(a, syms->cell[i]->type == LVAL_SYM,
+			"Function 'def' cannot bind a value to a non-symbol");
+	}
+
+	LASSERT(a, syms->count == a->count-1,
+		"Function 'def' given different number of values than the symbols to bind to");
+
+	for (int i = 0; i < syms->count; i++)
+	{
+		lenv_put(e, syms->cell[i], a->cell[i+1]);
+	}
+
+	lval_del(a);
+	return lval_sexpr();
+
+
+
+
+
+}
+
+
 void lenv_add_builtin(lenv* env, char* name, lbuiltin func)
 {
 	lval* k = lval_sym(name);
@@ -546,6 +578,7 @@ void lenv_add_builtins(lenv* e)
 	lenv_add_builtin(e, "tail", builtin_tail);
 	lenv_add_builtin(e, "join", builtin_join);
 	lenv_add_builtin(e, "eval", builtin_eval);
+	lenv_add_builtin(e, "def", builtin_def);
 
 	lenv_add_builtin(e, "+", builtin_add);
 	lenv_add_builtin(e, "-", builtin_sub);
