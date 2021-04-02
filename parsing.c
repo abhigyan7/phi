@@ -800,17 +800,39 @@ lval* lval_call(lenv* e, lval* f, lval* a)
 	if (f->builtin)
 	{ return f->builtin(e, a);}
 
-	for (int i = 0; i < a->count; i++)
+	int given = a->count;
+	int total = f->formals->count;
+
+	while (a->count)
 	{
-		lenv_put(f->env, f->formals->cell[i], a->cell[i]);
+		if (f->formals->count == 0)
+		{
+			lval_del(a);
+			return lval_err(
+				"Function passed too many arguemnts. "
+				"Got %i, expected %i.", given, total);
+		}
+
+		lval* sym = lval_pop(f->formals, 0);
+
+		lval* val = lval_pop(a, 0);
+
+		lenv_put(f->env, sym, val);
+
+		lval_del(sym); lval_del(val);
 	}
 
 	lval_del(a);
 
-	f->env->par = e;
+	if (f->formals->count == 0)
+	{
+		f->env->par = e;
 
-	return builtin_eval(f->env,
-		lval_add(lval_sexpr(), lval_copy(f->body)));
+		return builtin_eval(
+			f->env, lval_add(lval_sexpr(), lval_copy(f->body)));
+	} else {
+		return lval_copy(f);
+	}
 }
 
 lval* lval_eval_sexpr(lenv* env, lval* v)
