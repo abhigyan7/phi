@@ -38,7 +38,7 @@ lval* lval_take(lval* v, int i)
 }
 
 
-lval* builtin_head(lenv* e, lval* a)
+lval* builtin_head(__attribute__((unused)) lenv* e, lval* a)
 {
 
 	LASSERT(a, a->count == 1,
@@ -65,7 +65,7 @@ lval* builtin_head(lenv* e, lval* a)
 }
 
 
-lval* builtin_tail(lenv* e, lval* a)
+lval* builtin_tail(__attribute__((unused)) lenv* e, lval* a)
 {
 	LASSERT(a, a->count == 1,
 		"Function 'tail' expected 1 argument, got %i!", a->count);
@@ -84,7 +84,7 @@ lval* builtin_tail(lenv* e, lval* a)
 }
 
 
-lval* builtin_list(lenv* e, lval* a)
+lval* builtin_list(__attribute__((unused)) lenv* e, lval* a)
 {
 	a->type = LVAL_QEXPR;
 	return a;
@@ -102,7 +102,7 @@ lval* lval_join(lval* x, lval*y)
 }
 
 
-lval* builtin_join(lenv* e, lval* a)
+lval* builtin_join(__attribute__((unused)) lenv* e, lval* a)
 {
 
 	for (int i = 0; i < a->count; i++)

@@ -6,7 +6,7 @@
 
 #include <string.h>
 
-lval* builtin_op(lenv* e, lval* a, char* op)
+lval* builtin_op(__attribute((unused)) lenv* e, lval* a, char* op)
 {
 	for (int i = 0; i < a->count; i++)
 	{

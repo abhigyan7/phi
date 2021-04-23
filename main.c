@@ -38,7 +38,7 @@ void add_history(char* unused) {}
 #include <readline/readline.h>
 #endif
 
-lval* builtin_lambda(lenv* e, lval* a)
+lval* builtin_lambda(__attribute__((unused)) lenv* e, lval* a)
 {
 	LASSERT_NUM("\\", a, 2);
 	LASSERT_TYPE("\\", a, 0, LVAL_QEXPR);
@@ -290,7 +290,7 @@ lval* lval_eval(lenv* env, lval* v)
 }
 
 
-int main(int argc, char** argv) 
+int main(__attribute__((unused)) int argc, __attribute__((unused)) char** argv) 
 {
 
 	mpc_parser_t* Number = mpc_new("number");
