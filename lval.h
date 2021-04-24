@@ -10,12 +10,16 @@ enum
 	LVAL_SYM, 
 	LVAL_SEXPR, 
 	LVAL_QEXPR, 
-	LVAL_FUN
+	LVAL_FUN,
+	LVAL_BOOL
 };
 
 typedef struct lenv lenv;
 
 typedef lval*(*lbuiltin)(lenv*, lval*);
+
+#define TRUE 1
+#define FALSE 0
 
 struct lval
 {
@@ -45,6 +49,8 @@ struct lval
 	 */
 	struct lval** cell;
 
+	char bool_state;
+
 };
 
 void lval_del(lval*);
@@ -53,6 +59,7 @@ lval* lval_err(char*, ...);
 lval* lval_sym(char*);
 lval* lval_sexpr(void);
 lval* lval_qexpr(void);
+lval* lval_bool(int);
 lval* lval_fun(lbuiltin);
 lval* lval_lambda(lval*, lval*);
 lval* lval_copy(lval*);

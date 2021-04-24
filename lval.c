@@ -63,6 +63,18 @@ lval* lval_qexpr(void)
 	return v;
 }
 
+lval* lval_bool(int state)
+{
+	lval* v = malloc(sizeof(lval));
+	v->type = LVAL_BOOL;
+	if (state == 0){
+		v->bool_state = FALSE;
+	} else {
+		v->bool_state = TRUE;
+	}
+	return v;
+}
+
 lval* lval_fun(lbuiltin func)
 {
 	lval* v = malloc(sizeof(lval));
@@ -92,6 +104,7 @@ void lval_del(lval* v)
 	{
 	
 		case LVAL_NUM: break;
+		case LVAL_BOOL: break;
 
 		case LVAL_ERR: free(v->err); break;
 		case LVAL_SYM: free(v->sym); break;
@@ -127,6 +140,8 @@ lval* lval_copy(lval* v)
 	{
 		case LVAL_NUM:
 			x->num = v->num; break;
+		case LVAL_BOOL:
+			x->bool_state = v->bool_state; break;
 		case LVAL_FUN:
 			if (v->builtin)
 			{
@@ -179,8 +194,16 @@ void lval_print(lval* v)
 {
 	switch (v->type)
 	{
-		// if the value is a number, print it
 		case LVAL_NUM: printf("%li", v->num); break;
+
+		case LVAL_BOOL: 
+			if (v->bool_state == TRUE)
+			{
+				printf("true");
+			} else {
+				printf("false");
+			}
+		break;
 
 		// if an error, print message relevant to the error
 		case LVAL_ERR: printf("Error: %s", v->err); break;
@@ -215,6 +238,7 @@ char* ltype_name(int t)
 		case LVAL_SYM: return "Symbol"; break;
 		case LVAL_SEXPR: return "S-expression"; break;
 		case LVAL_QEXPR: return "Q-expression"; break;
+		case LVAL_BOOL: return "Boolean"; break;
 		default: return "Unknown";
 	}
 }

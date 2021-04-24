@@ -4,6 +4,7 @@
 #include "expressions.h"
 #include "arithmetics.h"
 #include "semantics.h"
+#include "bool.h"
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -4,6 +4,7 @@
 #include "expressions.h"
 #include "arithmetics.h"
 #include "common.h"
+#include "bool.h"
 
 #include "builtins.h"
 
@@ -74,13 +75,6 @@ lval* builtin_put(lenv* e, lval* a)
 	return builtin_var(e, a, "=");
 }
 
-void lenv_add_builtin(lenv* env, char* name, lbuiltin func)
-{
-	lval* k = lval_sym(name);
-	lval* v = lval_fun(func);
-	lenv_put(env, k, v);
-	lval_del(k); lval_del(v);
-}
 
 lval* builtin_eval(lenv* e, lval* a)
 {
@@ -235,20 +229,42 @@ lval* lval_eval(lenv* env, lval* v)
 	return v;
 }
 
+void lenv_add_builtin_fun(lenv* env, char* name, lbuiltin func)
+{
+	lval* k = lval_sym(name);
+	lval* v = lval_fun(func);
+	lenv_put(env, k, v);
+	lval_del(k); lval_del(v);
+}
+
+void lenv_add_builtin_val(lenv* env, char* name, lval* v)
+{
+	lval* k = lval_sym(name);
+	lenv_put(env, k, v);
+	lval_del(k); lval_del(v);
+}
+
 void lenv_add_builtins(lenv* e)
 {
-	lenv_add_builtin(e, "list", builtin_list);
-	lenv_add_builtin(e, "head", builtin_head);
-	lenv_add_builtin(e, "tail", builtin_tail);
-	lenv_add_builtin(e, "join", builtin_join);
-	lenv_add_builtin(e, "eval", builtin_eval);
+	lenv_add_builtin_fun(e, "list", builtin_list);
+	lenv_add_builtin_fun(e, "head", builtin_head);
+	lenv_add_builtin_fun(e, "tail", builtin_tail);
+	lenv_add_builtin_fun(e, "join", builtin_join);
+	lenv_add_builtin_fun(e, "eval", builtin_eval);
 
-	lenv_add_builtin(e, "+", builtin_add);
-	lenv_add_builtin(e, "-", builtin_sub);
-	lenv_add_builtin(e, "*", builtin_mul);
-	lenv_add_builtin(e, "/", builtin_div);
-	lenv_add_builtin(e, "\\", builtin_lambda);
-	lenv_add_builtin(e, "def", builtin_def);
-	lenv_add_builtin(e, "=", builtin_put);
+	lenv_add_builtin_fun(e, "+", builtin_add);
+	lenv_add_builtin_fun(e, "-", builtin_sub);
+	lenv_add_builtin_fun(e, "*", builtin_mul);
+	lenv_add_builtin_fun(e, "/", builtin_div);
+	lenv_add_builtin_fun(e, "\\", builtin_lambda);
+	lenv_add_builtin_fun(e, "def", builtin_def);
+	lenv_add_builtin_fun(e, "=", builtin_put);
+	
+	lenv_add_builtin_val(e, "true", lval_bool(TRUE));
+	lenv_add_builtin_val(e, "false", lval_bool(FALSE));
+
+	lenv_add_builtin_fun(e, "and", builtin_and);
+	lenv_add_builtin_fun(e, "or", builtin_or);
+	lenv_add_builtin_fun(e, "not", builtin_not);
 }
 
