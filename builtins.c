@@ -5,6 +5,7 @@
 #include "arithmetics.h"
 #include "common.h"
 #include "bool.h"
+#include "ordering.h"
 
 #include "builtins.h"
 
@@ -266,5 +267,12 @@ void lenv_add_builtins(lenv* e)
 	lenv_add_builtin_fun(e, "and", builtin_and);
 	lenv_add_builtin_fun(e, "or", builtin_or);
 	lenv_add_builtin_fun(e, "not", builtin_not);
+
+	lenv_add_builtin_fun(e, "<", builtin_lt);
+	lenv_add_builtin_fun(e, ">", builtin_gt);
+	lenv_add_builtin_fun(e, "<=", builtin_lte);
+	lenv_add_builtin_fun(e, ">=", builtin_gte);
+	lenv_add_builtin_fun(e, "==", builtin_eq);
+
 }
 
