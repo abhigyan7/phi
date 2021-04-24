@@ -7,7 +7,7 @@ lval* builtin_and(__attribute__((unused)) lenv* e, lval* a)
 {
 	lval* x = lval_pop(a, 0);
 
-	if (x->bool_state == 0)
+	if (x->bool_state == FALSE)
 	{
 		lval_del(x);
 		lval_del(a);
@@ -17,7 +17,7 @@ lval* builtin_and(__attribute__((unused)) lenv* e, lval* a)
 	while (a->count > 0)
 	{
 		lval* y = lval_pop(a, 0);
-		if (y->bool_state == 0)
+		if (y->bool_state == FALSE)
 		{
 			lval_del(x);
 			lval_del(y);
@@ -36,7 +36,7 @@ lval* builtin_or(__attribute__((unused)) lenv* e, lval* a)
 {
 	lval* x = lval_pop(a, 0);
 
-	if (x->bool_state == 1)
+	if (x->bool_state == TRUE)
 	{
 		lval_del(x);
 		lval_del(a);
@@ -46,7 +46,7 @@ lval* builtin_or(__attribute__((unused)) lenv* e, lval* a)
 	while (a->count > 0)
 	{
 		lval* y = lval_pop(a, 0);
-		if (y->bool_state == 1)
+		if (y->bool_state == TRUE)
 		{
 			lval_del(x);
 			lval_del(y);
@@ -66,7 +66,7 @@ lval* builtin_not(__attribute__((unused)) lenv* e, lval* a)
 	lval* x = lval_pop(a, 0);
 	if (a->count == 0)
 	{
-		if (x->bool_state == 0)
+		if (x->bool_state == FALSE)
 		{
 			lval_del(x);
 			lval_del(a);
