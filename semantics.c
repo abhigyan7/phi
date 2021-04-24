@@ -59,3 +59,49 @@ int number_of_nodes(mpc_ast_t* t)
 	return 0;
 }
 
+parser_elements* get_parser(void)
+{
+	parser_elements* ret = malloc(sizeof(parser_elements));
+
+	mpc_parser_t* Number = mpc_new("number");
+	mpc_parser_t* Symbol = mpc_new("symbol");
+	mpc_parser_t* Sexpr = mpc_new("sexpr");
+	mpc_parser_t* Qexpr = mpc_new("qexpr");
+	mpc_parser_t* Expr = mpc_new("expr");
+	mpc_parser_t* Lisp = mpc_new("lisp");
+
+	mpca_lang(MPCA_LANG_DEFAULT,
+		"						\
+		number	: /-?[0-9]+/ ;				\
+		symbol : /[a-zA-Z0-9_+\\-*\\/\\\\=<>!&]+/ ;	\
+		sexpr	: '(' <expr>* ')' ;			\
+		qexpr	: '{' <expr>* '}' ;			\
+		expr	: <number> | <symbol> | <sexpr> | <qexpr> ;	\
+		lisp	: /^/ <expr>* /$/ ;			\
+		",
+		Number, Symbol, Sexpr, Qexpr, Expr, Lisp);
+
+	ret->Number = Number;
+	ret->Symbol = Symbol;
+	ret->Sexpr = Sexpr;
+	ret->Qexpr = Qexpr;
+	ret->Expr= Expr;
+	ret->Lisp = Lisp;
+
+	return ret;
+
+}
+
+void free_parsers(parser_elements* _parser_elements)
+{
+	free(_parser_elements);
+	mpc_cleanup(
+			6, 
+			_parser_elements->Number, 
+			_parser_elements->Symbol, 
+			_parser_elements->Sexpr, 
+			_parser_elements->Qexpr, 
+			_parser_elements->Expr, 
+			_parser_elements->Lisp
+	);
+}

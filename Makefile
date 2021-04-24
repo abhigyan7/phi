@@ -7,7 +7,7 @@ CFLAGS = -Wall -Werror -Wextra -ledit
 #
 # Project files
 #
-SRCS = arithmetics.c expressions.c lenv.c lval.c main.c mpc.c semantics.c
+SRCS = arithmetics.c expressions.c lenv.c lval.c main.c mpc.c semantics.c builtins.c
 OBJS = $(SRCS:.c=.o)
 EXE  = lisp
 
