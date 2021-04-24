@@ -30,6 +30,52 @@ lval* builtin_lambda(__attribute__((unused)) lenv* e, lval* a)
 
 }
 
+lval* builtin_if(__attribute__((unused)) lenv* e, lval* a)
+{
+
+	lval* condition = lval_pop(a, 0);
+	lval* true_codepath = lval_pop(a, 0);
+
+	lval* false_codepath;
+	if (a->count == 1)
+	{
+		// the codepath to run when false 
+		false_codepath = lval_pop(a, 0);
+	} else if (a->count == 0) {
+		// empty codepath to run if no false_codepath given
+		false_codepath = lval_qexpr();
+	} else {
+		lval_del(condition);
+		lval_del(true_codepath);
+		return lval_err("if expected two qexprs, got more");
+	}
+
+	lval_del(a);
+
+	if (condition->type == LVAL_QEXPR)
+	{
+		condition->type = LVAL_SEXPR;
+		lval* condition_evaled = lval_eval(e, condition);
+		if (!(condition_evaled->type == LVAL_BOOL))
+		{
+			lval_del(condition_evaled);
+			return lval_err("Expected if condition to evaluate to a bool, it didn't");
+		}
+		condition = condition_evaled;
+	}
+
+	if (condition->bool_state == TRUE)
+	{
+		lval_del(condition);
+		if (true_codepath->type == LVAL_QEXPR) true_codepath->type = LVAL_SEXPR;
+		return lval_eval(e, true_codepath);
+	}
+
+	lval_del(condition);
+	if (true_codepath->type == LVAL_QEXPR) false_codepath->type = LVAL_SEXPR;
+	return lval_eval(e, false_codepath);
+}
+
 lval* builtin_var(lenv* e, lval* a, char* func)
 {
 	LASSERT_TYPE(func, a, 0, LVAL_QEXPR);
@@ -274,5 +320,6 @@ void lenv_add_builtins(lenv* e)
 	lenv_add_builtin_fun(e, ">=", builtin_gte);
 	lenv_add_builtin_fun(e, "==", builtin_eq);
 
+	lenv_add_builtin_fun(e, "if", builtin_if);
 }
 
