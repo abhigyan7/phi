@@ -28,7 +28,6 @@ lval* lval_pop(lval* v, int i)
 	return x;
 }
 
-
 lval* lval_take(lval* v, int i)
 {
 	lval* x = lval_pop(v, i);
@@ -36,7 +35,6 @@ lval* lval_take(lval* v, int i)
 	return x;
 
 }
-
 
 lval* builtin_head(__attribute__((unused)) lenv* e, lval* a)
 {
@@ -64,7 +62,6 @@ lval* builtin_head(__attribute__((unused)) lenv* e, lval* a)
 	return v;
 }
 
-
 lval* builtin_tail(__attribute__((unused)) lenv* e, lval* a)
 {
 	LASSERT(a, a->count == 1,
@@ -83,7 +80,6 @@ lval* builtin_tail(__attribute__((unused)) lenv* e, lval* a)
 
 }
 
-
 lval* builtin_list(__attribute__((unused)) lenv* e, lval* a)
 {
 	a->type = LVAL_QEXPR;
@@ -100,7 +96,6 @@ lval* lval_join(lval* x, lval*y)
 	lval_del(y);
 	return x;
 }
-
 
 lval* builtin_join(__attribute__((unused)) lenv* e, lval* a)
 {

@@ -36,7 +36,6 @@ lval* lval_err(char* fmt, ...)
 	return v;
 }
 
-
 lval* lval_sym(char* s)
 {
 	lval* v = malloc(sizeof(lval));
@@ -45,7 +44,6 @@ lval* lval_sym(char* s)
 	strcpy(v->sym, s);
 	return v;
 }
-
 
 lval* lval_sexpr(void)
 {
@@ -56,7 +54,6 @@ lval* lval_sexpr(void)
 	return v;
 }
 
-
 lval* lval_qexpr(void)
 {
 	lval* v = malloc(sizeof(lval));
@@ -66,7 +63,6 @@ lval* lval_qexpr(void)
 	return v;
 }
 
-
 lval* lval_fun(lbuiltin func)
 {
 	lval* v = malloc(sizeof(lval));
@@ -74,7 +70,6 @@ lval* lval_fun(lbuiltin func)
 	v->builtin = func;
 	return v;
 }
-
 
 lval* lval_lambda(lval* formals, lval* body)
 {
@@ -90,7 +85,6 @@ lval* lval_lambda(lval* formals, lval* body)
 
 	return v;
 }
-
 
 void lval_del(lval* v)
 {
@@ -166,7 +160,6 @@ lval* lval_copy(lval* v)
 	return x;
 }
 
-
 void lval_expr_print(lval* v, char open, char close)
 {
 	putchar(open);
@@ -181,7 +174,6 @@ void lval_expr_print(lval* v, char open, char close)
 	}
 	putchar(close);
 }
-
 
 void lval_print(lval* v)
 {
@@ -207,7 +199,6 @@ void lval_print(lval* v)
 	}
 }
 
-
 void lval_println(lval* v)
 {
 	lval_print(v);
@@ -227,3 +218,4 @@ char* ltype_name(int t)
 		default: return "Unknown";
 	}
 }
+

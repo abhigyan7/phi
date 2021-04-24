@@ -15,7 +15,6 @@ lenv* lenv_new(void)
 	return env;
 }
 
-
 void lenv_del(lenv* e)
 {
 	for (int i = 0; i < e->count; i++)
@@ -27,7 +26,6 @@ void lenv_del(lenv* e)
 	free(e->vals);
 	free(e);
 }
-
 
 lenv* lenv_copy(lenv* e)
 {
@@ -46,13 +44,11 @@ lenv* lenv_copy(lenv* e)
 	return n;
 }
 
-
 void lenv_def(lenv* e, lval* k, lval* v)
 {
 	while (e->par) { e = e->par; }
 	lenv_put(e, k, v);
 }
-
 
 lval* lenv_get(lenv* e, lval* k)
 {
@@ -71,7 +67,6 @@ lval* lenv_get(lenv* e, lval* k)
 		return lval_err("Unbound symbol '%s'", k->sym);
 	}
 }
-
 
 void lenv_put(lenv* e, lval* k, lval* v)
 {

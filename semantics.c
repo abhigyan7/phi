@@ -29,7 +29,6 @@ lval* lval_read(mpc_ast_t* t)
 	}
 	
 	return x;
-
 }
 
 lval* lval_read_num(mpc_ast_t* t)
@@ -39,7 +38,6 @@ lval* lval_read_num(mpc_ast_t* t)
 	return errno != ERANGE ?
 		lval_num(x) : lval_err("Invalid Number");
 }
-
 
 int number_of_nodes(mpc_ast_t* t)
 {
@@ -105,3 +103,4 @@ void free_parsers(parser_elements* _parser_elements)
 			_parser_elements->Lisp
 	);
 }
+

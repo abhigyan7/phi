@@ -4,7 +4,6 @@
 typedef struct lval lval;
 typedef struct lenv lenv;
 
-
 struct lenv
 {
 	lenv* par;

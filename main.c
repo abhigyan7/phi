@@ -1,5 +1,4 @@
 #include "mpc.h"
-
 #include "lenv.h"
 #include "lval.h"
 #include "expressions.h"
@@ -29,7 +28,6 @@ int main(__attribute__((unused)) int argc, __attribute__((unused)) char** argv)
 	// and add the builtins into it
 	lenv* env = lenv_new();
 	lenv_add_builtins(env);
-
 
 	/* REPL */
 	while (1)
@@ -61,7 +59,6 @@ int main(__attribute__((unused)) int argc, __attribute__((unused)) char** argv)
 	}
 
 	lenv_del(env);
-	
 	free_parsers(_parser_elements);
 
 	return 0;

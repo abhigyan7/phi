@@ -28,7 +28,6 @@ lval* builtin_lambda(__attribute__((unused)) lenv* e, lval* a)
 
 }
 
-
 lval* builtin_var(lenv* e, lval* a, char* func)
 {
 	LASSERT_TYPE(func, a, 0, LVAL_QEXPR);
@@ -60,6 +59,7 @@ lval* builtin_var(lenv* e, lval* a, char* func)
 			
 		}
 	}
+
 	lval_del(a);
 	return lval_sexpr();
 }
@@ -74,7 +74,6 @@ lval* builtin_put(lenv* e, lval* a)
 	return builtin_var(e, a, "=");
 }
 
-
 void lenv_add_builtin(lenv* env, char* name, lbuiltin func)
 {
 	lval* k = lval_sym(name);
@@ -82,7 +81,6 @@ void lenv_add_builtin(lenv* env, char* name, lbuiltin func)
 	lenv_put(env, k, v);
 	lval_del(k); lval_del(v);
 }
-
 
 lval* builtin_eval(lenv* e, lval* a)
 {
@@ -101,9 +99,6 @@ lval* builtin_eval(lenv* e, lval* a)
 	x->type = LVAL_SEXPR;
 	return lval_eval(e, x);
 }
-
-
-
 
 lval* lval_call(lenv* e, lval* f, lval* a)
 {
@@ -149,6 +144,7 @@ lval* lval_call(lenv* e, lval* f, lval* a)
 
 	lval_del(a);
 
+	// variable arguments similar to *args in python
 	if (f->formals->count > 0 && strcmp(f->formals->cell[0]->sym, "&") == 0)
 	{
 		if (f->formals->count != 2)
@@ -168,13 +164,16 @@ lval* lval_call(lenv* e, lval* f, lval* a)
 
 	if (f->formals->count == 0)
 	{
+		// all formals have been substituted, eval the function and return
 		f->env->par = e;
 
 		return builtin_eval(
 			f->env, lval_add(lval_sexpr(), lval_copy(f->body)));
 	} else {
+		// not all formals have been substituted, return a partial
 		return lval_copy(f);
 	}
+
 }
 
 lval* lval_eval_sexpr(lenv* env, lval* v)
@@ -220,7 +219,6 @@ lval* lval_eval_sexpr(lenv* env, lval* v)
 	lval_del(f);
 	return result;
 }
-
 
 lval* lval_eval(lenv* env, lval* v)
 {

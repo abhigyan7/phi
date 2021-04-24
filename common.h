@@ -46,7 +46,6 @@ char* readline(char* prompt)
 
 void add_history(char* unused) {}
 
-
 #else
 #include <readline/history.h>
 #include <readline/readline.h>

@@ -8,6 +8,7 @@
 
 lval* builtin_op(__attribute((unused)) lenv* e, lval* a, char* op)
 {
+	// ensure every argument is a number
 	for (int i = 0; i < a->count; i++)
 	{
 		if (a->cell[i]->type != LVAL_NUM)
@@ -19,6 +20,7 @@ lval* builtin_op(__attribute((unused)) lenv* e, lval* a, char* op)
 
 	lval* x = lval_pop(a, 0);
 
+	// negation
 	if ((strcmp(op, "-") == 0) && a->count == 0)
 	{
 		x->num = -x->num;
@@ -41,12 +43,13 @@ lval* builtin_op(__attribute((unused)) lenv* e, lval* a, char* op)
 			}
 			x->num /= y->num;
 		}
-	lval_del(y);
+
+		lval_del(y);
 	}
+
 	lval_del(a);
 	return x;
 }
-
 
 lval* builtin_add(lenv* e, lval*a)
 {
