@@ -156,7 +156,7 @@ lval* lval_copy(lval* v)
 			x->bool_state = v->bool_state; break;
 		case LVAL_STR:
 			x->str = malloc(strlen(v->str) + 1);
-			strcpy(x->err, v->str);
+			strcpy(x->str, v->str);
 			break;
 		case LVAL_FUN:
 			if (v->builtin)
