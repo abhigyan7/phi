@@ -3,6 +3,8 @@
 #include "expressions.h"
 #include <string.h>
 #include "ordering.h"
+#include <stdio.h>
+#include "common.h"
 
 lval* builtin_ordering_op(__attribute__((unused)) lenv* e, lval*a, char* op)
 {
@@ -33,7 +35,7 @@ lval* builtin_ordering_op(__attribute__((unused)) lenv* e, lval*a, char* op)
 		} else if (strcmp(op, ">=") == 0) { 
 			ret->bool_state = (x->num >= y->num) ? TRUE : FALSE;
 		} else if (strcmp(op, "==") == 0) { 
-			ret->bool_state = (x->num == y->num) ? TRUE : FALSE;
+			ret->bool_state = lval_eq(x, y);
 		}
 
 		if ( ret->bool_state == FALSE) {
@@ -67,5 +69,12 @@ lval* builtin_gte(lenv* e, lval* a)
 lval* builtin_eq(lenv* e, lval* a)
 {
 	return builtin_ordering_op(e, a, "==");
+}
+lval* builtin_neq(lenv* e, lval* a)
+{
+	LASSERT_NUM("!=", a, 2);
+	lval* eq = builtin_eq(e, a);
+	eq->bool_state = eq->bool_state? FALSE: TRUE;
+	return eq;
 }
 

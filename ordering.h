@@ -6,4 +6,5 @@ lval* builtin_gt(lenv* e, lval* a);
 lval* builtin_lte(lenv* e, lval* a);
 lval* builtin_gte(lenv* e, lval* a);
 lval* builtin_eq(lenv* e, lval* a);
+lval* builtin_neq(lenv* e, lval* a);
 #endif

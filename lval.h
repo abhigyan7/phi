@@ -6,6 +6,7 @@ typedef struct lval lval;
 enum 
 {
 	LVAL_NUM, 
+	LVAL_STR,
 	LVAL_ERR, 
 	LVAL_SYM, 
 	LVAL_SEXPR, 
@@ -26,10 +27,9 @@ struct lval
 	int type;
 
 	long num;
-
 	char* err;
-
 	char* sym;
+	char* str;
 
 	lbuiltin builtin;
 	lenv* env;
@@ -55,6 +55,7 @@ struct lval
 
 void lval_del(lval*);
 lval* lval_num(long);
+lval* lval_str(char*);
 lval* lval_err(char*, ...);
 lval* lval_sym(char*);
 lval* lval_sexpr(void);
@@ -63,6 +64,7 @@ lval* lval_bool(int);
 lval* lval_fun(lbuiltin);
 lval* lval_lambda(lval*, lval*);
 lval* lval_copy(lval*);
+int lval_eq(lval*, lval*);
 void lval_expr_print(lval*, char, char);
 void lval_print(lval*);
 void lval_println(lval*);

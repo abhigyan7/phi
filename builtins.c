@@ -319,6 +319,7 @@ void lenv_add_builtins(lenv* e)
 	lenv_add_builtin_fun(e, "<=", builtin_lte);
 	lenv_add_builtin_fun(e, ">=", builtin_gte);
 	lenv_add_builtin_fun(e, "==", builtin_eq);
+	lenv_add_builtin_fun(e, "!=", builtin_neq);
 
 	lenv_add_builtin_fun(e, "if", builtin_if);
 }

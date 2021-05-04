@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include "mpc.h"
 
 lenv* lenv_new(void);
 void lenv_del(lenv*);
@@ -13,6 +14,15 @@ lval* lval_num(long x)
 	lval* v = malloc(sizeof(lval));
 	v->type = LVAL_NUM;
 	v->num = x;
+	return v;
+}
+
+lval* lval_str(char* s)
+{
+	lval* v = malloc(sizeof(lval));
+	v->type = LVAL_STR;
+	v->str = malloc(strlen(s) + 1);
+	strcpy(v->str, s);
 	return v;
 }
 
@@ -106,6 +116,8 @@ void lval_del(lval* v)
 		case LVAL_NUM: break;
 		case LVAL_BOOL: break;
 
+		case LVAL_STR: free(v->str); break;
+
 		case LVAL_ERR: free(v->err); break;
 		case LVAL_SYM: free(v->sym); break;
 
@@ -142,6 +154,10 @@ lval* lval_copy(lval* v)
 			x->num = v->num; break;
 		case LVAL_BOOL:
 			x->bool_state = v->bool_state; break;
+		case LVAL_STR:
+			x->str = malloc(strlen(v->str) + 1);
+			strcpy(x->err, v->str);
+			break;
 		case LVAL_FUN:
 			if (v->builtin)
 			{
@@ -175,6 +191,46 @@ lval* lval_copy(lval* v)
 	return x;
 }
 
+int lval_eq(lval* x, lval* y)
+{
+	if (x->type != y->type)
+	{
+		return 0;
+	}
+
+	switch (x->type)
+	{
+		case LVAL_NUM: return (x->num == y->num);
+		case LVAL_STR: return (strcmp(x->str, y->str) == 0);
+		case LVAL_ERR: return (strcmp(x->err, y->err) == 0);
+		case LVAL_SYM: return (strcmp(x->sym, y->sym) == 0);
+
+		case LVAL_FUN:
+			if (x->builtin || y->builtin)
+			{
+				return x->builtin == y->builtin;
+			} else {
+				return lval_eq(x->formals, y->formals) && lval_eq(x->body, y->body);
+			}
+		case LVAL_QEXPR:
+		case LVAL_SEXPR:
+			if (x->count != y->count)
+			{
+				return 0;
+			}
+			for (int i = 0; i < y->count; i++)
+			{
+				if (!lval_eq(x->cell[i], y->cell[i]))
+				{
+					return 0;
+				}
+			}
+			return 1;
+		break;
+	}
+	return 0;
+}
+
 void lval_expr_print(lval* v, char open, char close)
 {
 	putchar(open);
@@ -188,6 +244,18 @@ void lval_expr_print(lval* v, char open, char close)
 		}
 	}
 	putchar(close);
+} 
+
+void lval_print_str(lval* v) {
+  /* Make a Copy of the string */
+  char* escaped = malloc(strlen(v->str)+1);
+  strcpy(escaped, v->str);
+  /* Pass it through the escape function */
+  escaped = mpcf_escape(escaped);
+  /* Print it between " characters */
+  printf("\"%s\"", escaped);
+  /* free the copied string */
+  free(escaped);
 }
 
 void lval_print(lval* v)
@@ -219,6 +287,7 @@ void lval_print(lval* v)
 				putchar(' '); lval_print(v->body); putchar(')');
 			}
 		break;
+		case LVAL_STR: lval_print_str(v); break;
 	}
 }
 
@@ -233,6 +302,7 @@ char* ltype_name(int t)
 	switch(t)
 	{
 		case LVAL_NUM: return "Number"; break;
+		case LVAL_STR: return "String"; break;
 		case LVAL_FUN: return "Function"; break;
 		case LVAL_ERR: return "Error"; break;
 		case LVAL_SYM: return "Symbol"; break;
