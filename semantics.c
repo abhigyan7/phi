@@ -87,7 +87,7 @@ parser_elements* get_parser(void)
 	mpc_parser_t* Sexpr = mpc_new("sexpr");
 	mpc_parser_t* Qexpr = mpc_new("qexpr");
 	mpc_parser_t* Expr = mpc_new("expr");
-	mpc_parser_t* Lisp = mpc_new("lisp");
+	mpc_parser_t* Phi = mpc_new("phi");
 
 	mpca_lang(MPCA_LANG_DEFAULT,
 		"													\
@@ -98,9 +98,9 @@ parser_elements* get_parser(void)
 		sexpr	: '(' <expr>* ')' ;							\
 		qexpr	: '{' <expr>* '}' ;							\
 		expr	: <number> | <symbol> | <string> | <comment> | <sexpr> | <qexpr> ;	\
-		lisp	: /^/ <expr>* /$/ ;							\
+		phi : /^/ <expr>* /$/ ;							\
 		",
-		Number, Symbol, String, Comment, Sexpr, Qexpr, Expr, Lisp);
+		Number, Symbol, String, Comment, Sexpr, Qexpr, Expr, Phi);
 
 	ret->Number = Number;
 	ret->Symbol = Symbol;
@@ -109,7 +109,7 @@ parser_elements* get_parser(void)
 	ret->Sexpr = Sexpr;
 	ret->Qexpr = Qexpr;
 	ret->Expr= Expr;
-	ret->Lisp = Lisp;
+	ret->Phi = Phi;
 
 	return ret;
 
@@ -117,7 +117,6 @@ parser_elements* get_parser(void)
 
 void free_parsers(parser_elements* _parser_elements)
 {
-	free(_parser_elements);
 	mpc_cleanup(
 			8, 
 			_parser_elements->Number, 
@@ -127,7 +126,8 @@ void free_parsers(parser_elements* _parser_elements)
 			_parser_elements->Sexpr, 
 			_parser_elements->Qexpr, 
 			_parser_elements->Expr, 
-			_parser_elements->Lisp
+			_parser_elements->Phi
 	);
+	free(_parser_elements);
 }
 

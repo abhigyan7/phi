@@ -4,12 +4,15 @@
 typedef struct lval lval;
 typedef struct lenv lenv;
 
+typedef struct mpc_parser_t mpc_parser_t;
+
 struct lenv
 {
 	lenv* par;
 	int count;
 	char** syms;
 	lval** vals;
+	mpc_parser_t* phi;
 };
 
 lenv* lenv_new(void);
